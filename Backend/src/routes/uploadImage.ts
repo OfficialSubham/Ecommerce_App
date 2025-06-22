@@ -41,7 +41,7 @@ imageUpload.post("/", async (c: Context) => {
             const dataUri = `data:${file.type};base64,${base64}`;
             const base64Data = dataUri.replace(/^data:image\/\w+;base64,/, '')
             // console.log(dataUri);
-            const private64Key = toBase64Safe(c.env.PRIVATE_KEY);
+            const private64Key = btoa(`${c.env.PRIVATE_KEY}:`);
             console.log(private64Key);
             
             const fileName = file.name;
@@ -53,7 +53,6 @@ imageUpload.post("/", async (c: Context) => {
             const res = await fetch(urlEndPoint, {
                 method: "POST",
                 headers: {
-                    Accept: "application/json",
                     Authorization
                 },
                 body: form
