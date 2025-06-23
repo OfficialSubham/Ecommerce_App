@@ -19,8 +19,17 @@ model Product {
   product_name        String
   product_description String?
   quantity            Int?
-  avaibility          Avaibility
+  avaibility          Avaibility?
   OrderDetails        OrderDetails[]
+  Images              Images[]
+}
+
+model Images {
+  image_id  Int     @id @default(autoincrement())
+  productId Int
+  imageUrl String
+  product   Product @relation(fields: [productId], references: [product_id], onDelete: Cascade)
+  fileId String?
 }
 
 model OrderDetails {

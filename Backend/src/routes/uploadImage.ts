@@ -15,13 +15,13 @@ const arrayBufferToBase64 = (buffer: ArrayBuffer) => {
 }
 
 const toBase64Safe = (str: string): string => {
-  const encoder = new TextEncoder();
-  const bytes = encoder.encode(str);
-  let binary = '';
-  for (let b of bytes) {
-    binary += String.fromCharCode(b);
-  }
-  return btoa(binary);
+    const encoder = new TextEncoder();
+    const bytes = encoder.encode(str);
+    let binary = '';
+    for (let b of bytes) {
+        binary += String.fromCharCode(b);
+    }
+    return btoa(binary);
 }
 
 imageUpload.post("/", async (c: Context) => {
@@ -29,27 +29,29 @@ imageUpload.post("/", async (c: Context) => {
     try {
         const body = await c.req.formData();
         const files = body.getAll("files") as File[];
+        console.log("body: ", body);
+        const productName = body.get('productName');
+        const productDescription = body.get('productDescription');  
 
         const uploadUrls: string[] = [];
 
         for (const file of files) {
-            console.log("FILE: ",file);
-            
+
             const arrayBuffer = await file.arrayBuffer();
             const blob = new Blob([arrayBuffer], { type: file.type });
-            const base64 = arrayBufferToBase64(arrayBuffer)
-            const dataUri = `data:${file.type};base64,${base64}`;
-            const base64Data = dataUri.replace(/^data:image\/\w+;base64,/, '')
-            // console.log(dataUri);
+            // const base64 = arrayBufferToBase64(arrayBuffer)
+            // const dataUri = `data:${file.type};base64,${base64}`;
+            // const base64Data = dataUri.replace(/^data:image\/\w+;base64,/, '')
+            // // console.log(dataUri);
             const private64Key = btoa(`${c.env.PRIVATE_KEY}:`);
             console.log(private64Key);
-            
-            const fileName = file.name;
+
+            // const fileName = file.name;
             const form = new FormData();
             form.append("file", blob);
             form.append("fileName", file.name);
             const urlEndPoint = 'https://upload.imagekit.io/api/v1/files/upload'
-            const Authorization =  `Basic ${private64Key}`;
+            const Authorization = `Basic ${private64Key}`;
             const res = await fetch(urlEndPoint, {
                 method: "POST",
                 headers: {
