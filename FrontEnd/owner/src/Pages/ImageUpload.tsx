@@ -15,8 +15,8 @@ const ImageUpload = () => {
     const imageLink = URL.createObjectURL(e.target.files![0]);
     setImageUrl((prev) => prev.concat(imageLink));
   };
-  const form = new FormData();
   const handleOnClick = async () => {
+    const form = new FormData();
     setLoading(true);
     imageFile.forEach((file) => {
       form.append("files", file);
@@ -39,9 +39,20 @@ const ImageUpload = () => {
     }
   };
 
+  const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const id = Number(e.currentTarget.id);
+    console.log(id);
+    URL.revokeObjectURL(imageUrl[id]);
+    setImageFile((file) => file.filter((_, idx) => idx !== id));
+    setImageUrl((file) => file.filter((_, idx) => idx !== id));
+  };
+
   useEffect(() => {
-    console.log(imageFile);
-  }, [imageFile]);
+    // console.log(imageFile);
+    return () => {
+      imageUrl.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, );
 
   return (
     <>
@@ -53,12 +64,12 @@ const ImageUpload = () => {
           </div>
         </div>
       )}
-      <div className="bg-slate-700 text-while min-h-screen flex flex-col">
+      <div className="bg-slate-700 text-while min-w-screen min-h-screen flex flex-col no-scrollbar">
         <div className="w-full py-5 flex flex-col items-center justify-center bg-[#1e202c] gap-4">
-          <div className="gap-4 flex">
+          <div className="gap-4 flex w-full md:w-auto px-10">
             <input
               type="file"
-              className="bg-[#bfe0d1] border p-4"
+              className="bg-[#bfe0d1] border p-4 w-full md:w-auto"
               multiple
               onChange={handleOnChange}
               value={""}
@@ -70,10 +81,10 @@ const ImageUpload = () => {
               SEND
             </button>
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-col md:flex-row gap-4 w-full px-10 md:w-auto">
             <input
               type="text"
-              className="bg-[#bfe0d1] border p-4"
+              className="bg-[#bfe0d1] border p-4 w-full"
               multiple
               onChange={(e) => {
                 setProductName(e.target.value);
@@ -92,15 +103,26 @@ const ImageUpload = () => {
           </div>
         </div>
         <div className="flex-1 bg-[#31323e] w-full overflow-hidden">
-          <div className="grid gap-3 justify-center mt-5 overflow-y-auto max-h-[90vh] md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-8 px-4">
+          <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 justify-center mt-5 overflow-y-auto max-h-[90vh] no-scrollbar">
             {imageUrl.map((i, idx) => {
               return (
-                <img
-                  src={i}
-                  alt="hlo"
+                <div
+                  className="h-72 w-full gap-2 flex flex-col items-center justify-center"
                   key={idx}
-                  className="h-64 w-64 object-contain"
-                />
+                >
+                  <img
+                    src={i}
+                    alt="hlo"
+                    className="h-10/12 w-64 object-contain"
+                  />
+                  <button
+                    onClick={handleDelete}
+                    className="bg-red-500 rounded-2xl cursor-pointer px-20 py-3 text-white"
+                    id={`${idx}`}
+                  >
+                    DELETE
+                  </button>
+                </div>
               );
             })}
           </div>
