@@ -1,0 +1,18 @@
+@import "tailwindcss";
+:root {
+  --primary: #9ba8ab;
+  --secondary: #ccd0cf;
+  --primary-color: #1b1c1d;
+  --primary-button: #00cc99;
+}
+
+@font-face {
+    font-family: Buster;
+    src: url(./assets/fonts/BUSTER.ttf)
+}
+
+@font-face {
+    font-family: Amagro;
+    src: url(./assets/fonts/Amagro.ttf)
+}
+
