@@ -2,27 +2,44 @@ import axios from "axios";
 import React from "react";
 import { useEffect, useState } from "react";
 import Loading from "../utils/Loading";
+import { z } from "zod";
+
+const productSchema = z.object({
+  price: z.number().gt(0, "Price Cannot be 0"),
+  name: z.string().length(2, "Name is too short"),
+  image: z.string().min(1)
+})
 
 const ImageUpload = () => {
   const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [loading, setLoading] = useState(false);
-  const [imageFile, setImageFile] = useState<File[]>([]);
-  const [imageUrl, setImageUrl] = useState<string[]>([]);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState("");
   const [productName, setProductName] = useState("");
-  const [productDescription, setProductDescription] = useState("");
+  const [productPrice, setProductPrice] = useState("");
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setImageFile((prev) => prev.concat(e.target.files![0]));
+    setImageFile(e.target.files![0]);
     const imageLink = URL.createObjectURL(e.target.files![0]);
-    setImageUrl((prev) => prev.concat(imageLink));
+    setImageUrl(imageLink);
   };
   const handleOnClick = async () => {
+    
+    const result = productSchema.safeParse({
+      price: Number(productPrice),
+      name: productName,
+      image: imageUrl
+    })
+
+    if(!result.success) {
+      return alert("Try to enter valid Details")
+    }
+
     const form = new FormData();
     setLoading(true);
-    imageFile.forEach((file) => {
-      form.append("files", file);
-    });
+    form.append("files", imageFile || "");
     form.append("productName", productName);
-    form.append("productDescription", productDescription);
+    form.append("productPrice", productPrice);
+
     const res = await axios.post(`${BACKEND_URL}/api/v1/uploadImage`, form, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -30,29 +47,26 @@ const ImageUpload = () => {
     });
     setLoading(false);
     if (res.status == 200) {
-      setImageFile([]);
-      setImageUrl([]);
+      setImageUrl("");
       setProductName("");
-      setProductDescription("");
+      setProductPrice("");
     } else {
       alert(res.data.message);
     }
   };
 
-  const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const id = Number(e.currentTarget.id);
-    console.log(id);
-    URL.revokeObjectURL(imageUrl[id]);
-    setImageFile((file) => file.filter((_, idx) => idx !== id));
-    setImageUrl((file) => file.filter((_, idx) => idx !== id));
+  const handleDelete = () => {
+    setImageUrl("");
+    setImageFile(null);
+    URL.revokeObjectURL(imageUrl);
   };
 
   useEffect(() => {
     // console.log(imageFile);
     return () => {
-      imageUrl.forEach((url) => URL.revokeObjectURL(url));
+      URL.revokeObjectURL(imageUrl || "");
     };
-  }, );
+  });
 
   return (
     <>
@@ -70,9 +84,7 @@ const ImageUpload = () => {
             <input
               type="file"
               className="bg-[#bfe0d1] border p-4 w-full md:w-auto"
-              multiple
               onChange={handleOnChange}
-              value={""}
             />
             <button
               className="p-4 border bg-[#60519b] cursor-pointer"
@@ -93,38 +105,32 @@ const ImageUpload = () => {
               placeholder="Product Name"
             />
             <input
-              type="text"
+              type="number"
               className="bg-[#bfe0d1] border p-4"
               multiple
-              onChange={(e) => setProductDescription(e.target.value)}
-              value={productDescription}
+              onChange={(e) => setProductPrice(e.target.value)}
+              value={productPrice}
               placeholder="Product desc"
             />
           </div>
         </div>
         <div className="flex-1 bg-[#31323e] w-full overflow-hidden">
           <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 justify-center mt-5 overflow-y-auto max-h-[90vh] no-scrollbar">
-            {imageUrl.map((i, idx) => {
-              return (
-                <div
-                  className="h-72 w-full gap-2 flex flex-col items-center justify-center"
-                  key={idx}
+            {imageUrl && (
+              <div className="h-72 w-full gap-2 flex flex-col items-center justify-center">
+                <img
+                  src={imageUrl}
+                  alt="hlo"
+                  className="h-10/12 w-64 object-contain"
+                />
+                <button
+                  onClick={handleDelete}
+                  className="bg-red-500 rounded-2xl cursor-pointer px-20 py-3 text-white"
                 >
-                  <img
-                    src={i}
-                    alt="hlo"
-                    className="h-10/12 w-64 object-contain"
-                  />
-                  <button
-                    onClick={handleDelete}
-                    className="bg-red-500 rounded-2xl cursor-pointer px-20 py-3 text-white"
-                    id={`${idx}`}
-                  >
-                    DELETE
-                  </button>
-                </div>
-              );
-            })}
+                  DELETE
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
