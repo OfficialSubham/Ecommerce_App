@@ -37,48 +37,45 @@ imageUpload.post("/", async (c: Context) => {
             datasourceUrl: c.env.DATABASE_URL
         }).$extends(withAccelerate());
         const body = await c.req.formData();
-        const files = body.getAll("files") as File[];
-        console.log("body: ", body);
+        const files = body.get("files") as File;
         const productName = body.get('productName');
-        const productDescription = body.get('productDescription');
+        const productPrice = body.get('productPrice');
 
         const databaseData: productInterface[] = [];
 
-        for (const file of files) {
+        const arrayBuffer = await files.arrayBuffer();
+        const blob = new Blob([arrayBuffer], { type: files.type });
+        // const base64 = arrayBufferToBase64(arrayBuffer)
+        // const dataUri = `data:${files.type};base64,${base64}`;
+        // const base64Data = dataUri.replace(/^data:image\/\w+;base64,/, '')
+        // // console.log(dataUri);
+        const private64Key = btoa(`${c.env.PRIVATE_KEY}:`);
+        console.log(private64Key);
 
-            const arrayBuffer = await file.arrayBuffer();
-            const blob = new Blob([arrayBuffer], { type: file.type });
-            // const base64 = arrayBufferToBase64(arrayBuffer)
-            // const dataUri = `data:${file.type};base64,${base64}`;
-            // const base64Data = dataUri.replace(/^data:image\/\w+;base64,/, '')
-            // // console.log(dataUri);
-            const private64Key = btoa(`${c.env.PRIVATE_KEY}:`);
-            console.log(private64Key);
-
-            // const fileName = file.name;
-            const form = new FormData();
-            form.append("file", blob);
-            form.append("fileName", file.name);
-            const urlEndPoint = 'https://upload.imagekit.io/api/v1/files/upload'
-            const Authorization = `Basic ${private64Key}`;
-            const res = await fetch(urlEndPoint, {
-                method: "POST",
-                headers: {
-                    Authorization
-                },
-                body: form
+        // const fileName = file.name;
+        const form = new FormData();
+        form.append("file", blob);
+        form.append("fileName", files.name);
+        const urlEndPoint = 'https://upload.imagekit.io/api/v1/files/upload'
+        const Authorization = `Basic ${private64Key}`;
+        const res = await fetch(urlEndPoint, {
+            method: "POST",
+            headers: {
+                Authorization
+            },
+            body: form
+        })
+        const result = await res.json();
+        console.log("DATA : ", result);
+        if (result.fileId && result.url) {
+            const fileId = result.fileId;
+            const url = result.url;
+            databaseData.push({
+                fileId,
+                url
             })
-            const result = await res.json();
-            console.log("DATA : ", result);
-            if (result.fileId && result.url) {
-                const fileId = result.fileId;
-                const url = result.url;
-                databaseData.push({
-                    fileId,
-                    url
-                })
-            }
         }
+
 
         if (databaseData.length == 0) {
             return c.json({
@@ -88,15 +85,16 @@ imageUpload.post("/", async (c: Context) => {
 
         await prisma.$transaction(async (tx) => {
 
-            if (typeof productName !== "string" || typeof productDescription !== "string") {
+            if (typeof productName !== "string") {
                 return c.json({
                     "message": "Enter Valid Name"
-                })
+                }, 400)
             }
+            const price = Number(productPrice) * 100;
             const res = await tx.product.create({
                 data: {
                     product_name: productName,
-                    product_description: productDescription
+                    price
                 }
             })
             const productId = res.product_id;
@@ -111,8 +109,8 @@ imageUpload.post("/", async (c: Context) => {
             //         })
             //     })
             // )
-            await tx.images.createMany({
-                data: databaseData.map(data => ({ productId, imageUrl: data.url, fileId: data.fileId }))
+            await tx.images.create({
+                data: { productId, imageUrl: databaseData[0].url, fileId: databaseData[0].fileId }
             })
 
         })
@@ -121,7 +119,7 @@ imageUpload.post("/", async (c: Context) => {
         })
     } catch (error) {
         console.log(error)
-        return c.json({ "message": "Problem occured" })
+        return c.json({ "message": "Problem occured" }, 500)
     }
 
 

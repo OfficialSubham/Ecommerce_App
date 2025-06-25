@@ -22,6 +22,7 @@ model Product {
   avaibility          Avaibility?
   OrderDetails        OrderDetails[]
   Images              Images[]
+  price Int
 }
 
 model Images {
