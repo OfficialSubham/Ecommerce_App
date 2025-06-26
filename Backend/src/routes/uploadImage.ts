@@ -50,7 +50,7 @@ imageUpload.post("/", async (c: Context) => {
         // const base64Data = dataUri.replace(/^data:image\/\w+;base64,/, '')
         // // console.log(dataUri);
         const private64Key = btoa(`${c.env.PRIVATE_KEY}:`);
-        console.log(private64Key);
+        // console.log(private64Key);
 
         // const fileName = file.name;
         const form = new FormData();
@@ -66,7 +66,7 @@ imageUpload.post("/", async (c: Context) => {
             body: form
         })
         const result = await res.json();
-        console.log("DATA : ", result);
+        // console.log("DATA : ", result);
         if (result.fileId && result.url) {
             const fileId = result.fileId;
             const url = result.url;
