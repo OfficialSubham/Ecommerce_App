@@ -20,27 +20,35 @@ model Product {
   product_description String?
   quantity            Int?
   avaibility          Avaibility?
-  OrderDetails        OrderDetails[]
   Images              Images[]
-  price Int
+  price               Int
+  OrderedItems        OrderedItems[]
 }
 
 model Images {
   image_id  Int     @id @default(autoincrement())
   productId Int
-  imageUrl String
+  imageUrl  String
   product   Product @relation(fields: [productId], references: [product_id], onDelete: Cascade)
-  fileId String?
+  fileId    String?
 }
 
 model OrderDetails {
-  order_id      Int     @id @default(autoincrement())
-  name          String
-  email         String?
-  phoneNo       String
+  order_id     Int            @id @default(autoincrement())
+  name         String
+  address      String
+  email        String?
+  phoneNo      String
+  OrderedItems OrderedItems[]
+}
+
+model OrderedItems {
+  id            Int          @id @default(autoincrement())
   productId     Int
   quantityOrder Int
-  product       Product @relation(fields: [productId], references: [product_id])
+  product       Product      @relation(fields: [productId], references: [product_id])
+  orderedId     Int
+  OrderDetails  OrderDetails @relation(fields: [orderedId], references: [order_id])
 }
 
 enum Avaibility {
