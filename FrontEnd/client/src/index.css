@@ -16,3 +16,9 @@
     src: url(./assets/fonts/Amagro.ttf)
 }
 
+html,
+body,
+#root {
+  height: 100vh;
+  width: 100vw;
+}

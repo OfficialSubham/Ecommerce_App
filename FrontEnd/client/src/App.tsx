@@ -11,30 +11,29 @@ function App() {
   const productsLoadable = useRecoilValueLoadable(productState);
 
   return (
-    <>
+    <div className="flex flex-col bg-(--primary)">
       <Router>
         <Navbar />
         <Routes>
-          
           <Route
             element={
-              <div className="min-h-screen w-[100vw] bg-(--primary) items-center justify-center flex flex-col">
-                {productsLoadable.contents[0] ? (
-                  <>
-                    <CenterImage />
-                    <Contents />
-                  </>
-                ) : (
+              productsLoadable.contents[0] ? (
+                <div>
+                  <CenterImage />
+                  <Contents />
+                </div>
+              ) : (
+                <div className="w-full h-screen flex justify-center items-center">
                   <Loading />
-                )}
-              </div>
+                </div>
+              )
             }
             path="/"
           />
           <Route element={<Cart />} path="/cart" />
         </Routes>
       </Router>
-    </>
+    </div>
   );
 }
 

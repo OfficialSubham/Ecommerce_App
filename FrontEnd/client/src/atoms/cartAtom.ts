@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 
 interface UserCart {
     id: number;
@@ -11,5 +11,17 @@ interface UserCart {
 export const cartState = atom({
     key: "cartState",
     default: [] as UserCart[]
+})
+
+export const totalPrice = selector({
+    key: "totalPrice",
+    get: ({get}) => {
+        const cart = get(cartState);
+        let total = 0;
+        cart.forEach((item) => {
+            total += ((item.price/100) * item.quantity)
+        })
+        return total;
+    },
 })
 

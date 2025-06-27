@@ -22,7 +22,7 @@ export const productState = atom({
     key: "productState",
     default: selector({
         key: "allProduct",
-        get: async ({ get }) => {
+        get: async () => {
             const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
             const { status, data }: { status: number; data: iData } = await axios.get(
                 `${BACKEND_URL}/product/bulk`
@@ -30,7 +30,7 @@ export const productState = atom({
             if (status == 200) {
                 return data.products
             }
-            console.log(data);
+            // console.log(data);
         }
     })
 }) 
