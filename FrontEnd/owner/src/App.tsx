@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import ImageUpload from "./Pages/ImageUpload";
 import ProtectedRoute from "./Pages/ProtectedRoute";
+import LoginPage from "./Pages/LoginPage";
 
 function App() {
   return (
@@ -12,8 +13,9 @@ function App() {
       <Router>
         <Routes>
           <Route element={<ProtectedRoute />}>
-            <Route element={<ImageUpload />} path="/"></Route>
+            <Route element={<ImageUpload />} path="/" />
           </Route>
+          <Route element={<LoginPage/>} path="/login"/>
         </Routes>
       </Router>
     </>

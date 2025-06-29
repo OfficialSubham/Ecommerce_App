@@ -6,8 +6,8 @@ import { z } from "zod";
 
 const productSchema = z.object({
   price: z.number().gt(0, "Price Cannot be 0"),
-  name: z.string().length(2, "Name is too short"),
-  image: z.string().min(1)
+  name: z.string().min(2, "Name is too short"),
+  image: z.string()
 })
 
 const ImageUpload = () => {
@@ -40,7 +40,7 @@ const ImageUpload = () => {
     form.append("productName", productName);
     form.append("productPrice", productPrice);
 
-    const res = await axios.post(`${BACKEND_URL}/api/v1/uploadImage`, form, {
+    const res = await axios.post(`${BACKEND_URL}/uploadImage`, form, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -110,7 +110,7 @@ const ImageUpload = () => {
               multiple
               onChange={(e) => setProductPrice(e.target.value)}
               value={productPrice}
-              placeholder="Product desc"
+              placeholder="Product Price"
             />
           </div>
         </div>
