@@ -14,7 +14,7 @@ const Contents = () => {
   // }, []);
 
   return (
-    <div className="w-full h-auto grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 px-4 ">
+    <div className="w-full h-full grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 px-4 ">
       {productsLoadable.contents.map(
         ({
           product_id,

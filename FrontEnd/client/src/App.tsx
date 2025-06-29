@@ -11,7 +11,7 @@ function App() {
   const productsLoadable = useRecoilValueLoadable(productState);
 
   return (
-    <div className="flex flex-col bg-(--primary)">
+    <div className="flex min-h-screen flex-col bg-(--primary)">
       <Router>
         <Navbar />
         <Routes>

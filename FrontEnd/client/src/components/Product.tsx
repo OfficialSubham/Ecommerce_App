@@ -13,7 +13,7 @@ const Product = ({ imgUrl, price, productName, id }: IProps) => {
   const handleAddToCart = () => {
     let isMoreThanFive = false;
     const isThere = cart.find((eachItem) => {
-      if(eachItem.id == id) {
+      if(eachItem.productId == id) {
         if(eachItem.quantity < 5) {
           return true;
         }
@@ -30,7 +30,7 @@ const Product = ({ imgUrl, price, productName, id }: IProps) => {
     if (isThere) {
       setCart((currentCart) => {
         return currentCart.map((eachItem) => {
-          if (eachItem.id == id) {
+          if (eachItem.productId == id) {
             return {
               ...eachItem,
               quantity: eachItem.quantity + 1,
@@ -42,10 +42,10 @@ const Product = ({ imgUrl, price, productName, id }: IProps) => {
     } else {
       setCart((cart) =>
         cart.concat({
-          id,
+          productId: id,
           price,
-          imgUrl,
-          name: productName,
+          url: imgUrl,
+          productName,
           quantity: 1,
         })
       );
@@ -65,8 +65,8 @@ const Product = ({ imgUrl, price, productName, id }: IProps) => {
           <h4>{productName}</h4>
           <h3>&#8377; {Number(price) / 100}.00 </h3>
         </div>
-        <div className="bg-(--primary-button) rounded-2xl h-10 px-3 py-2.5 flex items-center">
-          <button className="h-full" onClick={handleAddToCart}>
+        <div className="bg-(--primary-button) rounded-2xl h-10 px-3 py-2.5 flex items-center hover:border duration-150 transition-transform ">
+          <button className="h-full " onClick={handleAddToCart}>
             <img
               src="./svg/arrow.svg"
               className="object-cover h-full"

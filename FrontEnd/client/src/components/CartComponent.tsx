@@ -14,7 +14,7 @@ const CartComponent = ({ url, price, quantity, id, name }: CartProps) => {
   const handleClick = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCart((cart) => {
       return cart.map((item) => {
-        if (item.id == id) {
+        if (item.productId == id) {
          return {
             ...item,
             quantity:  Number(e.target.value)
@@ -49,7 +49,7 @@ const CartComponent = ({ url, price, quantity, id, name }: CartProps) => {
           <option value="4">4</option>
           <option value="5">5</option>
         </select>
-        <h3 className="bg-amber-200">Price : {(price / 100) * quantity}.00</h3>
+        <h3 className="">Price : {(price / 100) * quantity}.00</h3>
       </div>
     </div>
   );

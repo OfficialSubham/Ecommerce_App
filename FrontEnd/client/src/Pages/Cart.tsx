@@ -10,15 +10,15 @@ const Cart = () => {
   const [inPurchase, setInPurchase] = useState(false);
   return (
     <div className="min-h-[calc(100vh-6rem)] flex justify-center  w-full bg-(--primary) inset-0">
-      {inPurchase && <OrderDetails/>}
+      {inPurchase && <OrderDetails setInPurchase={setInPurchase}/>}
       <div className="w-full sm:w[40vw] md:w-[50vw] bg-(--primary) flex flex-col gap-5 px-5 pt-5">
-        {cart.map(({ id, imgUrl, name, price, quantity }) => {
+        {cart.map(({ productId, url, productName, price, quantity }) => {
           return (
             <CartComponent
-              id={id}
-              name={name}
-              key={id}
-              url={imgUrl}
+              id={productId}
+              name={productName}
+              key={productId}
+              url={url}
               price={price}
               quantity={quantity}
             />

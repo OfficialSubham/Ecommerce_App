@@ -1,10 +1,10 @@
 import { atom, selector } from "recoil";
 
 interface UserCart {
-    id: number;
-    imgUrl: string;
+    productId: number;
+    url: string;
     price: number;
-    name: string;
+    productName: string;
     quantity: number
 }
 
