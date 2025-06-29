@@ -3,6 +3,7 @@ import { cors } from 'hono/cors'
 import { productRoute } from './routes/productlist';
 import { imageUploadRoute } from './routes/uploadImage';
 import purchaseRoute from './routes/purchase';
+import ownerRoute from './routes/ownerLogin';
 
 type Env = {
   Bindings: {
@@ -23,6 +24,8 @@ app.get('/', (c) => {
 app.route("/api/v1/product", productRoute);
 app.route("/api/v1/uploadImage", imageUploadRoute);
 app.route("/api/v1/purchase", purchaseRoute);
+app.route("/api/v1/login", ownerRoute);
+
 app.onError((e, c) => {
   console.log("error", e);
   return c.json({
