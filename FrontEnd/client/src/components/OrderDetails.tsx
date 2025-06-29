@@ -3,6 +3,7 @@ import { useRecoilState } from "recoil";
 import { z } from "zod";
 import { cartState } from "../atoms/cartAtom";
 import Loading from "./Loading";
+import axios from "axios";
 const OrderDetails = ({
   setInPurchase,
 }: {
@@ -46,13 +47,22 @@ const OrderDetails = ({
       address: userDetails.address,
       products: products,
     });
-
     if (!success) {
       console.log(error);
       return alert("Enter valid credential");
     }
     setLoading(true);
     console.log(userDetails);
+    const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
+    const res = await axios.post(`${BACKEND_URL}/purchase`, {
+      name: userDetails.name,
+      address: userDetails.address,
+      phone: userDetails.number,
+      products,
+    });
+
+    console.log(res);
+
     setLoading(false);
     setInPurchase(false);
     alert("Order Placed Successfully");
