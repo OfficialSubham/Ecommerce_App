@@ -69,7 +69,7 @@ purchase.post("/", async (c: Context) => {
         let total = 0;
         const productList = products.map((item, idx) => {
             total += ((item.price / 100) * item.quantity)
-            return `Image: ${item.url} \n 📦${idx + 1}. ${item.productName} (x${item.quantity}) - ₹${item.price} \n`
+            return `Image: ${item.url} \n 📦${idx + 1}. ${item.productName} (x${item.quantity}) - ₹${item.price / 100} \n`
         }).join("\n")
 
         const userDetail = `${productList} \n \n👤 Name: ${name} \n 📞 Phone: ${phone} \n 📍Address: ${address} \n \n🛍️ TOTAL: ₹${total}`
