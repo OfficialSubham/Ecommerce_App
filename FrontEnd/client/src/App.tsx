@@ -5,7 +5,6 @@ import Navbar from "./components/Navbar";
 import Cart from "./Pages/Cart";
 import { useRecoilValueLoadable } from "recoil";
 import { productState } from "./atoms/productAtom";
-import Loading from "./components/Loading";
 
 function App() {
   const productsLoadable = useRecoilValueLoadable(productState);
@@ -17,16 +16,16 @@ function App() {
         <Routes>
           <Route
             element={
-              productsLoadable.contents[0] ? (
-                <div>
-                  <CenterImage />
+              <div>
+                <CenterImage />
+                {productsLoadable.contents[0] ? (
                   <Contents />
-                </div>
-              ) : (
-                <div className="w-full h-screen flex justify-center items-center">
-                  <Loading />
-                </div>
-              )
+                ) : (
+                  <div className="w-full h-screen flex justify-center items-center font-[Buster]">
+                    Currently There is Nothing to show
+                  </div>
+                )}
+              </div>
             }
             path="/"
           />
