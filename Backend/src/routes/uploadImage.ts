@@ -94,7 +94,8 @@ imageUpload.post("/", async (c: Context) => {
             const res = await tx.product.create({
                 data: {
                     product_name: productName,
-                    price
+                    price,
+                    date: new Date()
                 }
             })
             const productId = res.product_id;

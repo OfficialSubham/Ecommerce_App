@@ -23,6 +23,7 @@ model Product {
   Images              Images[]
   price               Int
   OrderedItems        OrderedItems[]
+  date DateTime
 }
 
 model Images {

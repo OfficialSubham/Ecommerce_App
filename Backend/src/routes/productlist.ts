@@ -23,6 +23,9 @@ productRoute.get("/bulk", async (c: Context) => {
                     price: true,
                     product_id: true,
                     product_name: true
+                },
+                orderBy: {
+                    date: "desc"
                 }
             }
         )
