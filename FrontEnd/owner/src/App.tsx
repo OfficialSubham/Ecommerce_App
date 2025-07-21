@@ -6,6 +6,7 @@ import {
 import ImageUpload from "./Pages/ImageUpload";
 import ProtectedRoute from "./Pages/ProtectedRoute";
 import LoginPage from "./Pages/LoginPage";
+import ProductList from "./Pages/ProductList";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route element={<ProtectedRoute />}>
             <Route element={<ImageUpload />} path="/" />
+            <Route element={<ProductList />} path="/yourproducts" />
           </Route>
           <Route element={<LoginPage/>} path="/login"/>
         </Routes>

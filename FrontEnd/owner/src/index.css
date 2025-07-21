@@ -9,3 +9,6 @@
     scrollbar-width: none;
   }
 }
+input[type="checkbox"] {
+  zoom: 1.5;
+}
