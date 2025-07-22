@@ -23,7 +23,9 @@ model Product {
   Images              Images[]
   price               Int
   OrderedItems        OrderedItems[]
-  date DateTime
+  date                DateTime
+  category            Category?
+  productSize         productSize[]
 }
 
 model Images {
@@ -55,4 +57,24 @@ model OrderedItems {
 enum Avaibility {
   inStock
   OutOfStock
+}
+
+model productSize {
+  id        Int     @id @default(autoincrement())
+  size      Size?
+  productId Int
+  product   Product @relation(fields: [productId], references: [product_id], onDelete: Cascade)
+}
+
+enum Size {
+  S
+  M
+  L
+  XL
+  XXL
+}
+
+enum Category {
+  normalV
+  playerV
 }
