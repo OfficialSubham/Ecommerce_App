@@ -4,29 +4,43 @@ import { useEffect, useState } from "react";
 import Loading from "../utils/Loading";
 import { z } from "zod";
 import Sizes from "../utils/Sizes";
+import { useNavigate } from "react-router";
 
 type typeSize = "S" | "M" | "L" | "XL" | "XXL";
 
 type iSize = {
   [key in typeSize]: boolean;
 };
-
-const productSchema = z.object({
-  price: z.number().gt(0, "Price Cannot be 0"),
-  name: z.string().min(2, "Name is too short"),
-  image: z.string(),
+const ProductSchema = z.object({
+  productName: z.string().min(2, "Name is too short"),
+  productPrice: z.number().gt(0, "Price Cannot be 0"),
+  productDescription: z.string().min(4),
+  productCategory: z.enum(["normalV", "playerV"]),
+  imageUrl: z.string().min(1),
 });
+// const productSchema = z.object({
+//   price: z.number().gt(0, "Price Cannot be 0"),
+//   name: z.string().min(2, "Name is too short"),
+//   image: z.string(),
+// });
 
 const ImageUpload = () => {
   //Imports from env's
   const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
   //States
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [productDetails, setProductDetails] = useState({
+    productName: "",
+    productPrice: "",
+    productDescription: "",
+    category: "normalV",
+  });
   const [imageUrl, setImageUrl] = useState("");
-  const [productName, setProductName] = useState("");
-  const [productPrice, setProductPrice] = useState("");
+  // const [productName, setProductName] = useState("");
+  // const [productPrice, setProductPrice] = useState("");
   const [isOnSizeSelection, setIsOnSizeSelection] = useState(false);
   const [selectedSizes, setSelectedSizes] = useState<iSize>({
     S: false,
@@ -42,22 +56,42 @@ const ImageUpload = () => {
     const imageLink = URL.createObjectURL(e.target.files![0]);
     setImageUrl(imageLink);
   };
+
+  const handleProductDetails = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setProductDetails({
+      ...productDetails,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const handleOnClick = async () => {
-    const result = productSchema.safeParse({
-      price: Number(productPrice),
-      name: productName,
-      image: imageUrl,
+    const productSizes = Object.entries(selectedSizes)
+      .filter(([, selected]) => selected)
+      .map(([size]) => size);
+    if (productSizes.length == 0) {
+      return alert("Try to enter valid Details");
+    }
+    console.log(productSizes);
+    const { success, data } = ProductSchema.safeParse({
+      productPrice: Number(productDetails.productPrice),
+      productName: productDetails.productName,
+      imageUrl,
+      productDescription: productDetails.productDescription,
+      productCategory: productDetails.category,
     });
 
-    if (!result.success) {
+    if (!success) {
       return alert("Try to enter valid Details");
     }
 
     const form = new FormData();
     setLoading(true);
     form.append("files", imageFile || "");
-    form.append("productName", productName);
-    form.append("productPrice", productPrice);
+    form.append("productName", data.productName);
+    form.append("productPrice", `${data.productPrice}`);
+    form.append("productCategory", data.productCategory);
+    form.append("productDescription", data.productDescription);
+    form.append("productSizes", JSON.stringify(productSizes));
 
     const res = await axios.post(`${BACKEND_URL}/uploadImage`, form, {
       headers: {
@@ -67,8 +101,12 @@ const ImageUpload = () => {
     setLoading(false);
     if (res.status == 200) {
       setImageUrl("");
-      setProductName("");
-      setProductPrice("");
+      setProductDetails({
+        productName: "",
+        productPrice: "",
+        productDescription: "",
+        category: "normalV",
+      });
     } else {
       alert(res.data.message);
     }
@@ -108,6 +146,14 @@ const ImageUpload = () => {
         selectedSizes={selectedSizes}
         setSelectedSizes={setSelectedSizes}
       />
+      <button
+        className="absolute right-4 top-4 bg-[#60519b] border px-1 py-2"
+        onClick={() => {
+          navigate("/yourproducts");
+        }}
+      >
+        Your Products
+      </button>
       <div className="bg-slate-700 text-while min-w-screen min-h-screen flex flex-col no-scrollbar">
         <div
           className="fixed bottom-0 w-full py-5 flex gap-4
@@ -138,28 +184,45 @@ const ImageUpload = () => {
                 type="text"
                 className="bg-[#bfe0d1] border p-4 w-full"
                 multiple
-                onChange={(e) => {
-                  setProductName(e.target.value);
-                }}
-                value={productName}
+                onChange={handleProductDetails}
+                value={productDetails.productName}
+                name="productName"
                 placeholder="Product Name"
               />
               <input
                 type="number"
                 className="bg-[#bfe0d1] border p-4"
                 multiple
-                onChange={(e) => setProductPrice(e.target.value)}
-                value={productPrice}
+                onChange={handleProductDetails}
+                value={productDetails.productPrice}
+                name="productPrice"
                 placeholder="Product Price"
               />
             </div>
             <textarea
               className="bg-[#bfe0d1] border h-30 mx-10 p-4"
               placeholder="Enter Product Description"
+              value={productDetails.productDescription}
+              onChange={(e) => {
+                setProductDetails({
+                  ...productDetails,
+                  productDescription: e.target.value,
+                });
+              }}
             />
           </div>
           <div className="h-10 mx-5">
-            <select name="version" className="w-70 bg-[#bfe0d1] h-full">
+            <select
+              name="version"
+              value={productDetails.category}
+              className="w-70 bg-[#bfe0d1] h-full"
+              onChange={(e) => {
+                setProductDetails({
+                  ...productDetails,
+                  category: e.target.value,
+                });
+              }}
+            >
               <option value="playerV">Player Version</option>
               <option value="normalV">Normal Version</option>
             </select>
