@@ -51,7 +51,7 @@ model OrderedItems {
   quantityOrder Int
   product       Product      @relation(fields: [productId], references: [product_id])
   orderedId     Int
-  OrderDetails  OrderDetails @relation(fields: [orderedId], references: [order_id])
+  OrderDetails  OrderDetails @relation(fields: [orderedId], references: [order_id], onDelete: Cascade)
 }
 
 enum Avaibility {
