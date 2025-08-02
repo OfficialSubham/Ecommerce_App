@@ -1,8 +1,8 @@
 import EachSizes from "./EachSizes";
 
-type typeSize = "S" | "M" | "L" | "XL" | "XXL";
+export type typeSize = "S" | "M" | "L" | "XL" | "XXL";
 
-type iSize = {
+export type iSize = {
   [key in typeSize]: boolean;
 };
 
@@ -28,7 +28,7 @@ const Sizes = ({
 
   return (
     isOpen && (
-      <div className="w-screen h-screen z-2 fixed flex justify-center items-center">
+      <div className="w-screen h-screen z-50 fixed flex justify-center items-center">
         <div className="absolute -z-10 w-full h-full bg-black opacity-50"></div>
         <div className="flex flex-col w-70 p-4 relative rounded-2xl bg-[#bfe0d1] ">
           <button

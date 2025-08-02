@@ -11,12 +11,13 @@ type typeSize = "S" | "M" | "L" | "XL" | "XXL";
 type iSize = {
   [key in typeSize]: boolean;
 };
-const ProductSchema = z.object({
+export const ProductSchema = z.object({
   productName: z.string().min(2, "Name is too short"),
   productPrice: z.number().gt(0, "Price Cannot be 0"),
   productDescription: z.string().min(4),
   productCategory: z.enum(["normalV", "playerV"]),
   imageUrl: z.string().min(1),
+  productSize: z.array(z.enum(["S", "M", "L", "XL", "XXL"])).min(1),
 });
 // const productSchema = z.object({
 //   price: z.number().gt(0, "Price Cannot be 0"),
@@ -78,6 +79,7 @@ const ImageUpload = () => {
       imageUrl,
       productDescription: productDetails.productDescription,
       productCategory: productDetails.category,
+      productSize: productSizes,
     });
 
     if (!success) {
@@ -91,7 +93,7 @@ const ImageUpload = () => {
     form.append("productPrice", `${data.productPrice}`);
     form.append("productCategory", data.productCategory);
     form.append("productDescription", data.productDescription);
-    form.append("productSizes", JSON.stringify(productSizes));
+    form.append("productSizes", JSON.stringify(data.productSize));
 
     const res = await axios.post(`${BACKEND_URL}/uploadImage`, form, {
       headers: {
