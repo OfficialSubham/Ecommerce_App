@@ -1,9 +1,8 @@
-import {
-  isEditingState,
-  productToBeEditState,
-} from "../atoms/isEditingAtom";
-import {  useSetRecoilState } from "recoil";
-import { type ActualProductType } from "../atoms/productAtom";
+import { isEditingState, productToBeEditState } from "../atoms/isEditingAtom";
+import { useSetRecoilState } from "recoil";
+import { productState, type ActualProductType } from "../atoms/productAtom";
+import axios from "axios";
+import { loadingState } from "../atoms/loadingAtom";
 
 const EachProduct = ({
   product_id,
@@ -13,8 +12,13 @@ const EachProduct = ({
   product_description,
   product_name,
 }: ActualProductType) => {
+  //ENVs
+  const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
+  //States
   const setIsEditing = useSetRecoilState(isEditingState);
   const editProduct = useSetRecoilState(productToBeEditState);
+  const setIsLoading = useSetRecoilState(loadingState);
+  const setProductState = useSetRecoilState(productState);
   //Handle Clicks
   const handleOnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const product = e.target as HTMLElement;
@@ -22,17 +26,33 @@ const EachProduct = ({
     // setTimeout(() => {
     //   setEditingProduct(editingProductValue)
     // }, 0)
-    
+
     // setEditingProduct(editingProductValue);
     console.log(product.id);
     setIsEditing(true);
   };
-  const handleDeleteProduct = () => {
+  const handleDeleteProduct = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
     const isConfirm = confirm("Are you sure you want to delete the product");
 
     if (!isConfirm) return;
-
-    console.log(isConfirm);
+    setIsLoading(true);
+    const productId = e.currentTarget.dataset.productId;
+    console.log(productId);
+    const res = await axios.delete(`${BACKEND_URL}/deleteProduct`, {
+      params: {
+        productId,
+      },
+    });
+    if (res.status != 200) {
+      setIsLoading(false);
+      return alert("Error while deleting Please try again later");
+    }
+    setProductState((prev) => {
+      return prev.filter((pro) => pro.product_id != Number(productId));
+    });
+    setIsLoading(false);
   };
 
   return (
@@ -86,6 +106,7 @@ const EachProduct = ({
         <button
           className="w-full h-10 rounded-2xl text-white font-bold bg-red-500"
           onClick={handleDeleteProduct}
+          data-product-id={`${product_id}`}
         >
           Delete
         </button>

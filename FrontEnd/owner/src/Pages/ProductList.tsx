@@ -2,13 +2,15 @@ import { useRecoilValue } from "recoil";
 import EachProduct from "../utils/EachProduct";
 import EditProduct from "../utils/EditProduct";
 import { productState } from "../atoms/productAtom";
+import Loading from "../utils/Loading";
+import { loadingState } from "../atoms/loadingAtom";
 
 const ProductList = () => {
   const entireProduct = useRecoilValue(productState);
-  if (entireProduct == undefined || entireProduct.length == 0)
-    return <div>Noting to show</div>;
+  const isLoading = useRecoilValue(loadingState);
   return (
-    <>
+    entireProduct && <>
+    {isLoading && <Loading/>}
       <EditProduct />
       <div className="w-screen min-h-screen bg-slate-700 flex flex-col px-5 py-2 gap-4">
         <div className="w-full">
