@@ -28,9 +28,7 @@ deleteProductRoute.delete("/", async (c: Context) => {
                 Authorization: `Basic ${private64Key}`
             }
         };
-        console.log(param.productId)
         const response = await fetch(url, options)
-        console.log(response)
         if (response.status != 204) return c.json({ message: "Error while deleting" }, 500);
 
         const dbCall = await prisma.product.delete({
