@@ -1,4 +1,4 @@
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useRecoilValueLoadable } from "recoil";
 import EachProduct from "../utils/EachProduct";
 import EditProduct from "../utils/EditProduct";
 import { productState } from "../atoms/productAtom";
@@ -6,11 +6,17 @@ import Loading from "../utils/Loading";
 import { loadingState } from "../atoms/loadingAtom";
 
 const ProductList = () => {
-  const entireProduct = useRecoilValue(productState);
+  const productLoadable = useRecoilValueLoadable(productState);
   const isLoading = useRecoilValue(loadingState);
+  if (productLoadable.state === "loading") {
+    return <Loading />;
+  } else if (productLoadable.state === "hasError") {
+    return <div>Something went wrong loading products.</div>;
+  }
+  const entireProduct = productLoadable.contents;
   return (
-    entireProduct && <>
-    {isLoading && <Loading/>}
+    <>
+      {isLoading && <Loading />}
       <EditProduct />
       <div className="w-screen min-h-screen bg-slate-700 flex flex-col px-5 py-2 gap-4">
         <div className="w-full">
