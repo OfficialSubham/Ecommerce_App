@@ -9,8 +9,13 @@ import Sizes from "./Sizes";
 import { productState, type productCategory } from "../atoms/productAtom";
 import { ProductSchema } from "../Pages/ImageUpload";
 import Loading from "./Loading";
+import axios from "axios";
 
 const EditProduct = () => {
+
+  //ENVs
+  const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
+
   // const [isEditing, setIsEditing] = useRecoilState(isEditingState);
   const [editingProduct, setEditingProduct] =
     useRecoilState(editingProductState);
@@ -38,17 +43,12 @@ const EditProduct = () => {
   const handleEditProduct = async () => {
     const confirmRes = confirm("Are you sure you want to update changes");
     if (!confirmRes) return;
-    // setProductState((prev) => {
-    //   return prev.map((pro) => {
-    //     return pro;
-    //   });
-    // });
     if (!editingProduct?.product_sizes) return alert("Select Size Properly");
     const sizes = Object.entries(editingProduct?.product_sizes)
       .filter(([size, bool]) => bool && size)
       .map(([size]) => size);
-    const { success } = ProductSchema.safeParse({
-      productPrice: Number(editingProduct.price),
+    const { success, data } = ProductSchema.safeParse({
+      productPrice: Number(editingProduct.price) * 100,
       productName: editingProduct.product_name,
       imageUrl: editingProduct.Images[0].imageUrl,
       productDescription: editingProduct.product_description,
@@ -60,7 +60,13 @@ const EditProduct = () => {
         "Hey please follow the minimum criteria of filling up the details"
       );
     setisLoading(true);
-
+    const res = await axios.post(`${BACKEND_URL}/editProduct`, {
+      body: {
+        ...data,
+        productId: editingProduct.product_id
+      }
+    })
+    console.log(res);
     setProductState((pre) => {
       return pre.map((pro) => {
         if (pro.product_id == editingProduct.product_id) {
