@@ -32,7 +32,7 @@ const Contents = () => {
         <div className="w-full flex h-full overflow-x-scroll justify-start items-center no-scrollbar gap-4">
           {playerProduct.length > 0 &&
             playerProduct
-              .slice(0, 4)
+              .slice(0, 6)
               .map(
                 ({
                   product_id,
@@ -57,7 +57,7 @@ const Contents = () => {
                   );
                 }
               )}
-          {playerProduct.length > 2 && (
+          {playerProduct.length > 6 && (
             <div className="min-w-30 mr-3">
               <button
                 className="px-4 py-2 w-full bg-black text-white rounded hover:bg-gray-800 transition"
@@ -84,7 +84,7 @@ const Contents = () => {
         <div className="w-full flex h-full overflow-x-scroll justify-start items-center no-scrollbar gap-4">
           {normalProduct.length > 0 &&
             normalProduct
-              ?.slice(0, 4)
+              ?.slice(0, 6)
               .map(
                 ({
                   product_id,
@@ -109,7 +109,7 @@ const Contents = () => {
                   );
                 }
               )}
-          {normalProduct.length > 2 && (
+          {normalProduct.length > 6 && (
             <div className="min-w-30 mr-3">
               <button
                 className="px-4 py-2 w-full bg-black text-white rounded hover:bg-gray-800 transition"

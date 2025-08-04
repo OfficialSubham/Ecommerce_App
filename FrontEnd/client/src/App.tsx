@@ -22,7 +22,7 @@ function App() {
         <Routes>
           <Route
             element={
-              <div className="w-full px-10">
+              <div className="w-[90vw] flex justify-center flex-col px-10">
                 <CenterImage />
                 {productsLoadable.contents[0] ? (
                   <Contents />
