@@ -17,7 +17,8 @@ const Product = ({ imgUrl, price, productName, id }: IProps) => {
   const navigate = useNavigate();
   // let timeOutId: number;
   const timeoutRef = useRef<number | null>(null);
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     let isMoreThanFive = false;
     setAddToCartState(true);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -67,6 +68,7 @@ const Product = ({ imgUrl, price, productName, id }: IProps) => {
   const allProduct = useRecoilValue(productState);
   const setCurrentProduct = useSetRecoilState(currentProduct);
   const handleProduct = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     const uid = Number(e.currentTarget.dataset.productUid);
     navigate(`${uid}`);
     const product = allProduct.find((pro) => {
