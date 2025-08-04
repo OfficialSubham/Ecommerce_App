@@ -7,7 +7,7 @@ const CenterImage = () => {
         <h1 className="sm:text-9xl text-7xl text-center font-[Buster] ">
             Welcome 
             <br />
-            To The Store
+            To Jersey Mart
         </h1>
       </div>
     </div>

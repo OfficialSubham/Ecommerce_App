@@ -6,6 +6,16 @@
   --primary-button: #00cc99;
 }
 
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
 @font-face {
     font-family: Buster;
     src: url(./assets/fonts/BUSTER.ttf)

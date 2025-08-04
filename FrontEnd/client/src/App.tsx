@@ -5,18 +5,24 @@ import Navbar from "./components/Navbar";
 import Cart from "./Pages/Cart";
 import { useRecoilValueLoadable } from "recoil";
 import { productState } from "./atoms/productAtom";
+import Footer from "./components/Footer";
+import AddedToCart from "./components/AddedToCart";
+import NormalJersey from "./Pages/NormalJersey";
+import PlayerJersey from "./Pages/PlayerJersey";
+import CatchAllIdRoute from "./components/CatchAllIdRoute";
 
 function App() {
   const productsLoadable = useRecoilValueLoadable(productState);
 
   return (
-    <div className="flex min-h-screen flex-col bg-(--primary)">
+    <div className="flex min-h-screen min-w-screen items-center flex-col bg-(--primary)">
+      <AddedToCart />
       <Router>
         <Navbar />
         <Routes>
           <Route
             element={
-              <div>
+              <div className="w-full px-10">
                 <CenterImage />
                 {productsLoadable.contents[0] ? (
                   <Contents />
@@ -30,7 +36,15 @@ function App() {
             path="/"
           />
           <Route element={<Cart />} path="/cart" />
+          <Route element={<NormalJersey />} path="/normalversion" />
+          <Route element={<PlayerJersey />} path="/playerversion" />
+          <Route element={<CatchAllIdRoute />} path="*" />
+
         </Routes>
+
+        <footer className="h-30 flex bottom-0 justify-center items-center bg-(--primary-color) text-white relative min-w-screen">
+          <Footer />
+        </footer>
       </Router>
     </div>
   );

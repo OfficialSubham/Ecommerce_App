@@ -1,5 +1,8 @@
-import { useRecoilState } from "recoil";
-import { cartState } from "../atoms/cartAtom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { addedToCartState, cartState } from "../atoms/cartAtom";
+import { useRef } from "react";
+import { useNavigate } from "react-router";
+import { currentProduct, productState } from "../atoms/productAtom";
 
 interface IProps {
   id: number;
@@ -10,21 +13,31 @@ interface IProps {
 
 const Product = ({ imgUrl, price, productName, id }: IProps) => {
   const [cart, setCart] = useRecoilState(cartState);
+  const setAddToCartState = useSetRecoilState(addedToCartState);
+  const navigate = useNavigate();
+  // let timeOutId: number;
+  const timeoutRef = useRef<number | null>(null);
   const handleAddToCart = () => {
     let isMoreThanFive = false;
+    setAddToCartState(true);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    timeoutRef.current = setTimeout(() => {
+      setAddToCartState(false);
+    }, 1000);
+
     const isThere = cart.find((eachItem) => {
-      if(eachItem.productId == id) {
-        if(eachItem.quantity < 5) {
+      if (eachItem.productId == id) {
+        if (eachItem.quantity < 5) {
           return true;
-        }
-        else {
-          isMoreThanFive =  true;
+        } else {
+          isMoreThanFive = true;
         }
       }
     });
 
-    if(isMoreThanFive) {
-      return alert("Not more than 5 items")
+    if (isMoreThanFive) {
+      return alert("Not more than 5 items");
     }
 
     if (isThere) {
@@ -51,8 +64,24 @@ const Product = ({ imgUrl, price, productName, id }: IProps) => {
       );
     }
   };
+  const allProduct = useRecoilValue(productState);
+  const setCurrentProduct = useSetRecoilState(currentProduct);
+  const handleProduct = (e: React.MouseEvent<HTMLDivElement>) => {
+    const uid = Number(e.currentTarget.dataset.productUid);
+    navigate(`${uid}`);
+    const product = allProduct.find((pro) => {
+      if (pro.product_id == uid) return pro;
+    });
+    if (product != undefined) setCurrentProduct(product);
+    console.log(uid);
+  };
+
   return (
-    <div className="w-full flex gap-3 flex-col h-[400px]">
+    <div
+      className="min-w-[300px] max-w-[300px] flex-1 shrink-0 flex gap-3 flex-col h-[400px]"
+      data-product-uid={id}
+      onClick={handleProduct}
+    >
       <div className="w-full h-3/4">
         <img
           src={`${imgUrl}`}
