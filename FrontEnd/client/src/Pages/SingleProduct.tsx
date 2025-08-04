@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { addedToCartState, cartState } from "../atoms/cartAtom";
 import { currentProduct } from "../atoms/productAtom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import Size from "../components/Size";
 
 const SingleProduct = () => {
   const [cart, setCart] = useRecoilState(cartState);
@@ -61,7 +62,7 @@ const SingleProduct = () => {
 
   return (
     currentProductState && (
-      <div className="w-full items-center min-h-[78vh] gap-4 md:flex-row flex-col flex px-10">
+      <div className="w-full items-center min-h-[78vh] gap-4 md:flex-row flex-col flex px-10 mt-5">
         <div className="min-w-[40%] h-[500px]">
           <img
             src={`${currentProductState?.Images[0].imageUrl}`}
@@ -73,6 +74,15 @@ const SingleProduct = () => {
           <h1 className="text-2xl">{currentProductState?.product_name}</h1>
           <h1>Price : {currentProductState?.price / 100}.00</h1>
           <p>{currentProductState?.product_description}</p>
+          <div>
+            <h1>Sizes Availabe : </h1>
+            <div className="flex gap-3">
+
+            {currentProductState.productSize.map(({ size }) => {
+              return <Size sz={size} />;
+            })}
+            </div>
+          </div>
           <div className=" rounded-2xl h-10 flex md:justify-start justify-center items-center">
             <button
               className="h-full w-40 bg-(--primary-button) px-3 py-2.5  hover:border rounded-2xl duration-150 transition-transform"
