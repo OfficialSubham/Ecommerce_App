@@ -1,5 +1,6 @@
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { cartState } from "../atoms/cartAtom";
+import { useEffect } from "react";
 
 interface CartProps {
   url: string;
@@ -10,20 +11,24 @@ interface CartProps {
 }
 
 const CartComponent = ({ url, price, quantity, id, name }: CartProps) => {
-  const setCart = useSetRecoilState(cartState);
+  const [cart, setCart] = useRecoilState(cartState);
   const handleClick = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCart((cart) => {
       return cart.map((item) => {
         if (item.productId == id) {
-         return {
+          return {
             ...item,
-            quantity:  Number(e.target.value)
-         }
+            quantity: Number(e.target.value),
+          };
         }
         return item;
       });
     });
   };
+
+  useEffect(() => {
+    localStorage.setItem("prevCart", JSON.stringify(cart));
+  }, [cart]);
 
   return (
     <div className="w-full h-36 flex p-2 gap-3 rounded-2xl border">

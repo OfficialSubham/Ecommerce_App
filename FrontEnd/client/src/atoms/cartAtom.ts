@@ -1,12 +1,22 @@
 import { atom, selector } from "recoil";
 
-interface UserCart {
+export interface UserCart {
     productId: number;
     url: string;
     price: number;
     productName: string;
     quantity: number
 }
+
+export const prevCart = selector<UserCart[] | undefined>({
+    key: "prevCart",
+    get: () => {
+        const prevCartString = localStorage.getItem("prevCart")
+        if (!prevCartString) return
+        const prevCartArray = JSON.parse(prevCartString) as UserCart[]
+        return prevCartArray
+    }
+})
 
 export const cartState = atom({
     key: "cartState",

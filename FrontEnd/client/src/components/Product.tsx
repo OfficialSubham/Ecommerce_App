@@ -1,6 +1,6 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { addedToCartState, cartState } from "../atoms/cartAtom";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import { currentProduct, productState } from "../atoms/productAtom";
 
@@ -78,6 +78,10 @@ const Product = ({ imgUrl, price, productName, id }: IProps) => {
     console.log(uid);
   };
 
+  useEffect(() => {
+    localStorage.setItem("prevCart", JSON.stringify(cart));
+  }, [cart]);
+
   return (
     <div
       className="min-w-[300px] max-w-[300px] flex-1 shrink-0 flex gap-3 flex-col h-[400px]"
@@ -96,15 +100,18 @@ const Product = ({ imgUrl, price, productName, id }: IProps) => {
           <h4>{productName}</h4>
           <h3>&#8377; {Number(price) / 100}.00 </h3>
         </div>
-        <div className="bg-(--primary-button) rounded-2xl h-10 px-3 py-2.5 flex items-center hover:border duration-150 transition-transform ">
-          <button className="h-full " onClick={handleAddToCart}>
+        <button
+          className="bg-(--primary-button) rounded-2xl h-10 px-3 py-2.5 flex items-center hover:border duration-150 transition-transform "
+          onClick={handleAddToCart}
+        >
+          <div className="h-full ">
             <img
               src="./svg/arrow.svg"
               className="object-cover h-full"
               alt="alt"
             />
-          </button>
-        </div>
+          </div>
+        </button>
       </div>
     </div>
   );
