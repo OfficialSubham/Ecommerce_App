@@ -8,9 +8,10 @@ const Cart = () => {
   const cart = useRecoilValue(cartState);
   const total = useRecoilValue(totalPrice);
   const [inPurchase, setInPurchase] = useState(false);
+
   return (
     <div className="min-h-[calc(100vh-6rem)] flex justify-center  w-full bg-(--primary) inset-0">
-      {inPurchase && <OrderDetails setInPurchase={setInPurchase}/>}
+      {inPurchase && <OrderDetails setInPurchase={setInPurchase} />}
       <div className="w-full sm:w[40vw] md:w-[50vw] bg-(--primary) flex flex-col gap-5 px-5 pt-5">
         {cart.map(({ productId, url, productName, price, quantity }) => {
           return (

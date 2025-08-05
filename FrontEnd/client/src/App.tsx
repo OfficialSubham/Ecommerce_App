@@ -17,10 +17,16 @@ function App() {
   const setCartState = useSetRecoilState(cartState);
   useEffect(() => {
     const prevCartString = localStorage.getItem("prevCart");
-    if (!prevCartString) setCartState([]);
-    else {
-      const prevCartArray = JSON.parse(prevCartString) as UserCart[];
-      setCartState(prevCartArray);
+    if (prevCartString == undefined) {
+      setCartState([]);
+    } else {
+      try {
+        const prevCartArray = JSON.parse(prevCartString) as UserCart[];
+        setCartState(prevCartArray);
+      } catch (err) {
+        console.error("Error parsing cart from localStorage:", err);
+        setCartState([]);
+      }
     }
   });
 

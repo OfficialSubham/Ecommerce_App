@@ -8,20 +8,15 @@ export interface UserCart {
     quantity: number
 }
 
-export const prevCart = selector<UserCart[] | undefined>({
-    key: "prevCart",
-    get: () => {
-        const prevCartString = localStorage.getItem("prevCart")
-        if (!prevCartString) return
-        const prevCartArray = JSON.parse(prevCartString) as UserCart[]
-        return prevCartArray
-    }
-})
-
 export const cartState = atom({
     key: "cartState",
     default: [] as UserCart[]
 })
+
+export const cartHydratedState = atom({
+  key: "cartHydratedState",
+  default: false,
+});
 
 export const totalPrice = selector({
     key: "totalPrice",

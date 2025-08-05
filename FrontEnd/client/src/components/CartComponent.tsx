@@ -26,8 +26,25 @@ const CartComponent = ({ url, price, quantity, id, name }: CartProps) => {
     });
   };
 
+  const handleDeleteFromCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const productId = Number(e.currentTarget.dataset.productId);
+    setCart((prevCart) => {
+      const newCart = prevCart.filter((item) => item.productId !== productId);
+
+      if (newCart.length === 0) {
+        localStorage.removeItem("prevCart");
+      }
+
+      return newCart;
+    });
+  };
+
   useEffect(() => {
-    localStorage.setItem("prevCart", JSON.stringify(cart));
+    if (cart.length === 0) {
+      localStorage.removeItem("prevCart");
+    } else {
+      localStorage.setItem("prevCart", JSON.stringify(cart));
+    }
   }, [cart]);
 
   return (
@@ -55,6 +72,15 @@ const CartComponent = ({ url, price, quantity, id, name }: CartProps) => {
           <option value="5">5</option>
         </select>
         <h3 className="">Price : {(price / 100) * quantity}.00</h3>
+      </div>
+      <div className="flex justify-center items-center">
+        <button
+          className="p-2 bg-red-500 rounded-xl text-white cursor-pointer font-[Buster]"
+          data-product-id={id}
+          onClick={handleDeleteFromCart}
+        >
+          Delete
+        </button>
       </div>
     </div>
   );
