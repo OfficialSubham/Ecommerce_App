@@ -73,7 +73,11 @@ const SingleProduct = () => {
         <div className="w-full font-[Buster] gap-7 p-4 flex flex-col justify-evenly">
           <h1 className="text-2xl">{currentProductState?.product_name}</h1>
           <h1>Price : {currentProductState?.price / 100}.00</h1>
-          <p>{currentProductState?.product_description}</p>
+          <div className="w-full h-[200px] overflow-y-scroll no-scrollbar">
+            Product Description :
+          <p className="whitespace-pre-line pl-3">{currentProductState?.product_description}</p>
+
+          </div>
           <div>
             <h1>Sizes Availabe : </h1>
             <div className="flex gap-3">
