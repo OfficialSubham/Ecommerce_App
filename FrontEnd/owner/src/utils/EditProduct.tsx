@@ -12,7 +12,6 @@ import Loading from "./Loading";
 import axios from "axios";
 
 const EditProduct = () => {
-
   //ENVs
   const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
@@ -63,10 +62,12 @@ const EditProduct = () => {
     const res = await axios.post(`${BACKEND_URL}/editProduct`, {
       body: {
         ...data,
-        productId: editingProduct.product_id
-      }
-    })
-    console.log(res);
+        productId: editingProduct.product_id,
+      },
+    });
+    if (res.status != 200) {
+      return alert("Some Error Occured in Backend Please Try again later");
+    }
     setProductState((pre) => {
       return pre.map((pro) => {
         if (pro.product_id == editingProduct.product_id) {
@@ -82,9 +83,8 @@ const EditProduct = () => {
         }
         return pro;
       });
-      
-    })
-    setEditingProduct(null);;
+    });
+    setEditingProduct(null);
     setProductToBeEdit(null);
     setisLoading(false);
   };

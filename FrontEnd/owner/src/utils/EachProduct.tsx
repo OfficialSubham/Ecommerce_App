@@ -28,7 +28,7 @@ const EachProduct = ({
     // }, 0)
 
     // setEditingProduct(editingProductValue);
-    console.log(product.id);
+    // console.log(product.id);
     setIsEditing(true);
   };
   const handleDeleteProduct = async (
@@ -39,7 +39,7 @@ const EachProduct = ({
     if (!isConfirm) return;
     setIsLoading(true);
     const productId = e.currentTarget.dataset.productId;
-    console.log(productId);
+    // console.log(productId);
     const res = await axios.delete(`${BACKEND_URL}/deleteProduct`, {
       params: {
         productId,

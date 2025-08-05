@@ -72,7 +72,7 @@ const ImageUpload = () => {
     if (productSizes.length == 0) {
       return alert("Try to enter valid Details");
     }
-    console.log(productSizes);
+    // console.log(productSizes);
     const { success, data } = ProductSchema.safeParse({
       productPrice: Number(productDetails.productPrice),
       productName: productDetails.productName,
