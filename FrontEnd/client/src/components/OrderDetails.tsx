@@ -52,7 +52,7 @@ const OrderDetails = ({
       return alert("Enter valid credential");
     }
     setLoading(true);
-    console.log(userDetails);
+    // console.log(userDetails);
     const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
     const res = await axios.post(`${BACKEND_URL}/purchase`, {
       name: userDetails.name,
@@ -60,8 +60,8 @@ const OrderDetails = ({
       phone: userDetails.number,
       products,
     });
-
-    console.log(res);
+    if(res.status != 200) return alert("Some error occured in backend please try again later")
+    // console.log(res);
 
     setLoading(false);
     setInPurchase(false);
