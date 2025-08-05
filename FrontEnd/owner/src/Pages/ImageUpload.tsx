@@ -109,6 +109,7 @@ const ImageUpload = () => {
         productDescription: "",
         category: "normalV",
       });
+      alert("Successfully Uploaded")
     } else {
       alert(res.data.message);
     }
