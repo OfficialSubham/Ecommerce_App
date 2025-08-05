@@ -67,6 +67,7 @@ const OrderDetails = ({
     setInPurchase(false);
     alert("Order Placed Successfully");
     setProducts([]);
+    localStorage.removeItem("prevCart");
   };
 
   return (
